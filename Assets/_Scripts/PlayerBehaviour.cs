@@ -21,6 +21,10 @@ public class PlayerBehaviour : MonoBehaviour
     public RampDirection rampDirection;
     public bool onRamp;
 
+    public int health;
+    public int lives;
+    public BarController healthBar;
+
     private Rigidbody2D m_rigidBody2D;
     private SpriteRenderer m_spriteRenderer;
     private Animator m_animator;
@@ -29,6 +33,8 @@ public class PlayerBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        health = 100;
+        lives = 3;
         m_rigidBody2D = GetComponent<Rigidbody2D>();
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_animator = GetComponent<Animator>();
@@ -165,7 +171,52 @@ public class PlayerBehaviour : MonoBehaviour
         // respawn
         if (other.gameObject.CompareTag("DeathPlane"))
         {
-            transform.position = spawnPoint.position;
+            LoseLife();
+
+        }
+
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            TakeDamage(10);
         }
     }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(15);
+        }
+    }
+
+    public void LoseLife()
+    {
+        lives -= 1;
+
+        if (lives > 0)
+        {
+            health = 100;
+            healthBar.SetValue(health);
+            transform.position = spawnPoint.position;   
+        }
+        else
+        {
+            // go to end scene
+        }
+        
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        healthBar.SetValue(health);
+
+        if (health <= 0)
+        {
+            LoseLife();
+        }
+    }
+
+    
 }

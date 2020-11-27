@@ -29,7 +29,7 @@ public class BarController : MonoBehaviour
     public void SetValue(int new_value)
     {
         currentValue = new_value;
-        bar.localScale = new Vector3(currentValue / maxValue, 1.0f, 1.0f);
+        bar.localScale = new Vector3((float)((double)currentValue / (double) maxValue), 1.0f, 1.0f);
 
         if (bar.localScale.x < 0)
         {
